@@ -13,13 +13,11 @@ const hexColor = (i, j, k) => {
     const color = (i + j + k) % 3;
     switch (color) {
         case 0:
-            return 'grey';
+            return 'lightgrey';
         case 1:
-            return 'red';
-        case 2:
-            return 'blue';
+            return 'white';
         default:
-            return 'black';
+            return 'grey';
     }
 }
 export default function Board({ width, height }) {
@@ -33,7 +31,13 @@ export default function Board({ width, height }) {
             j => hexRange().map(
                 k => {
                     const [x, y] = hexPosition(centerWidth, centerHeight, hexSize, i, j, k)
-                    return <Hex x={x} y={y} size={hexSize} fill={hexColor(i, j, k)} />
+                    return <Hex
+                        x={x} y={y}
+                        size={hexSize}
+                        fill={hexColor(i, j, k)}
+                        stroke='black'
+                        strokeWidth='1'
+                    />
                 }
             ).flat()
         ).flat()
