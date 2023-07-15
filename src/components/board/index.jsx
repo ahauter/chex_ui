@@ -15,16 +15,20 @@ const hexColor = (i, j, k) => {
         case 0:
             return 'lightgrey';
         case 1:
-            return 'white';
-        default:
             return 'grey';
+        default:
+            return 'white';
     }
 }
-export default function Board({ width, height }) {
+export default function Board({
+    width, height,
+    hexSize,
+    piecePositions,
+    handleClick
+}) {
     const canvasRef = useRef(null)
     const centerHeight = height / 2
     const centerWidth = width / 2
-    const hexSize = 30
 
     const hexes = hexRange().map(
         i => hexRange(i).map(
@@ -35,6 +39,7 @@ export default function Board({ width, height }) {
                     let co_j = j - minNum
                     let co_k = k - minNum
                     const [x, y] = hexPosition(centerWidth, centerHeight, hexSize, co_i, co_j, co_k)
+                    const piece = piecePositions[co_i][co_j][co_k];
                     if (minNum < 1)
                         return <Hex
                             x={x} y={y}
@@ -42,8 +47,9 @@ export default function Board({ width, height }) {
                             fill={hexColor(i, j, k)}
                             stroke='black'
                             strokeWidth='1'
-                            onClick={() => console.log(co_i, co_j, co_k)}
                             key={`${i}${j}${k}`}
+                            pieceName={piece}
+                            handleClick={() => handleClick([co_i, co_j, co_k])}
                         >
                         </Hex>
                     else return null;
@@ -52,7 +58,6 @@ export default function Board({ width, height }) {
         ).flat()
     ).flat().filter(hex => hex);
 
-    console.log(hexes.length);
     return <div className={styles.board}>
         <svg
             ref={canvasRef}

@@ -1,4 +1,6 @@
 import React from 'react'
+import { pieceImages } from '../../utils/pieceImages';
+
 /**
  * 
  * @param {x} center of the hex in the x axis
@@ -9,7 +11,11 @@ import React from 'react'
  * @param {strokeWidth} stroke width of the hex
  * @returns 
  */
-export default function Hex({ x, y, size, fill, stroke, strokeWidth }) {
+export default function Hex({
+    x, y, size,
+    fill, stroke, strokeWidth,
+    pieceName = "black_king",
+    handleClick }) {
     const angleIncrement = Math.PI / 3;
     const points = Array.from({ length: 6 }).map((_, i) => {
         const angle = angleIncrement * i;
@@ -19,10 +25,21 @@ export default function Hex({ x, y, size, fill, stroke, strokeWidth }) {
         ]
     });
     const pointsString = points.map(point => point.join(',')).join(' ');
-    return <polygon
-        points={pointsString}
-        fill={fill}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-    />
+    return <a
+        onClick={() => handleClick()}
+    >
+        <polygon
+            points={pointsString}
+            fill={fill}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+        />
+        {pieceName !== "" && <image
+            href={pieceImages[pieceName]}
+            x={x - (size / 1.35)}
+            y={y - (size / 1.35)}
+            height={size * 1.5}
+            width={size * 1.5}
+        />}
+    </a>
 }
