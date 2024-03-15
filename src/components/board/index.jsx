@@ -35,10 +35,12 @@ export default function Board({
     const centerHeight = height / 2
     const centerWidth = width / 2
     const [highlightedHexes, setHighLight] = useState([]);
+
     const onClick = (i, j, k, piece) => {
         const payload = {
             hex: [i, j, k],
-            piece: piece.replace("white_", "").replace("black_", "")
+            player: piece.substring(0, 5),
+            piece: piece ? { [piece.substring(6)]: [i, j, k] } : piece
         }
         console.log(payload)
         fetch("http://localhost:3001/moves", {
