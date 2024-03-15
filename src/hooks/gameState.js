@@ -33,18 +33,22 @@ const sameHex = (hex1, hex2) => {
  * @param {Array[3]} newHex Hex where the piece moves to 
  */
 const makeMove = (piece, oldPosition, oldHex, newHex) => {
+    const delta = [];
+    for( let i =0; i < oldHex.length; i ++) {
+        delta.push(newHex[i] - oldHex[i])
+    }
+    console.log("Delta", delta)
     let new_position = oldPosition;
     let oldPos = oldPosition[piece];
     let newPos = [];
-    console.log("Old piece pos", oldPos);
     console.log("Old hex", oldHex);
     for (let i = 0; i < oldPos.length; i++) {
+        delta.push(newHex - oldHex);
         if (!sameHex(oldPos[i], oldHex)) {
             newPos.push(oldPos[i]);
         }
     }
     newPos.push(newHex);
-    console.log("New piece pos", newPos)
     new_position[piece] = newPos;
     return new_position;
 }
