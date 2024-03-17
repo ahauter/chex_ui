@@ -38,9 +38,7 @@ export default function Board({
 
     const onClick = (i, j, k, piece) => {
         const payload = {
-            hex: [i, j, k],
-            player: piece.substring(0, 5),
-            piece: piece ? { [piece.substring(6)]: [i, j, k] } : piece
+            piece: piece ? { [piece.substring(6)]: { "hex": [i, j, k], "color": piece.substring(0, 5) } } : null
         }
         console.log(payload)
         fetch("http://localhost:3001/moves", {
