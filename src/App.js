@@ -3,6 +3,7 @@ import Board from './components/board';
 import React from 'react';
 import useGameState from './hooks/gameState';
 import { useState } from 'react';
+import ModeSelect from './components/modeSelect';
 
 const makePieceArray = (starting_position) => {
   // we make an array with 3 indexs, one for each coordinate 
@@ -29,21 +30,22 @@ const makePieceArray = (starting_position) => {
 }
 
 
+
 function App() {
+  const modes = ["Free Style", "Scenario Builder"]
   const [hexClicked, setHexClicked] = useState(null);
+  const [mode, setMode] = useState(modes[0]);
   const [state, dispatch] = useGameState();
   let pieceArray = makePieceArray(state.position);
-
-  const handleClick = (hex) => {
+  let handleClick = (hex) => { };
+  const handleClickGame = (hex, setHexClicked, dispatch) => {
     if (hexClicked === null) {
       setHexClicked(hex);
       return;
     }
     let [co1, co2, co3] = hexClicked;
     let piece = pieceArray[co1][co2][co3];
-    if (
-      piece === ""
-    ) {
+    if (piece === "") {
       setHexClicked(hex);
     } else {
       dispatch(
@@ -54,8 +56,14 @@ function App() {
       setHexClicked(null);
     }
   }
+  if (mode === "") {
+    handleClick = (hex) => handleClickGame(hex, setHexClicked, dispatch)
+  }
 
-  return (
+  return (<>
+    <h1>Welcome to Chex UI</h1>
+    <h3>Select a mode to get started</h3>
+    <ModeSelect selectedMode={mode} modeOptions={modes} setMode={setMode} />
     <Board
       width={900}
       height={900}
@@ -63,7 +71,7 @@ function App() {
       piecePositions={pieceArray}
       handleClick={handleClick}
     />
-  );
+  </>);
 }
 
 export default App;
