@@ -19,6 +19,21 @@ const starting_position = {
     white_rook: [[3, 5, 0], [0, 5, 3]],
 };
 
+const empty_position = {
+    black_bishop: [],
+    black_king: [],
+    black_knight: [],
+    black_pawn: [],
+    black_queen: [],
+    black_rook: [],
+    white_bishop: [],
+    white_king: [],
+    white_knight: [],
+    white_pawn: [],
+    white_queen: [],
+    white_rook: [],
+};
+
 const sameHex = (hex1, hex2) => {
     return hex1[0] === hex2[0]
         && hex1[1] === hex2[1]
@@ -33,17 +48,10 @@ const sameHex = (hex1, hex2) => {
  * @param {Array[3]} newHex Hex where the piece moves to 
  */
 const makeMove = (piece, oldPosition, oldHex, newHex) => {
-    const delta = [];
-    for( let i =0; i < oldHex.length; i ++) {
-        delta.push(newHex[i] - oldHex[i])
-    }
-    console.log("Delta", delta)
     let new_position = oldPosition;
     let oldPos = oldPosition[piece];
     let newPos = [];
-    console.log("Old hex", oldHex);
     for (let i = 0; i < oldPos.length; i++) {
-        delta.push(newHex - oldHex);
         if (!sameHex(oldPos[i], oldHex)) {
             newPos.push(oldPos[i]);
         }
@@ -53,6 +61,33 @@ const makeMove = (piece, oldPosition, oldHex, newHex) => {
     return new_position;
 }
 
+/**
+ * 
+ * @param {str} piece Name of the piece
+ * @param {dict} oldPosition Dictionary of the postions of the pieces
+ * @param {Array[3]} newHex Hex where to place the piece 
+ */
+const placePiece = (piece, oldPosition, newHex) => {
+    let new_position = oldPosition;
+    const newPos = new_position[piece]
+    newPos.push(newHex);
+    new_position[piece] = newPos;
+    return new_position;
+}
+
+/**
+ * 
+ * @param {str} piece Name of the piece
+ * @param {dict} oldPosition Dictionary of the postions of the pieces
+ * @param {Array[3]} removeHex Piece on hex will be removed 
+ */
+const removePiece = (piece, oldPosition, removeHex) => {
+    let new_position = oldPosition;
+    const newPos = new_position[piece]
+    newPos.filter(hex => !sameHex(hex, removeHex))
+    new_position[piece] = newPos;
+    return new_position;
+}
 export default function useGameState() {
     const reducer = (state, action) => {
         switch (action.type) {
@@ -61,6 +96,16 @@ export default function useGameState() {
                     position: makeMove(action.piece, state.position, action.oldHex, action.newHex),
                     turn: state.turn === 'white' ? 'black' : 'white',
                 };
+            case 'place':
+                return {
+                    position: makeMove(action.piece, state.position, action.oldHex, action.newHex),
+                    turn: state.turn === 'white' ? 'black' : 'white',
+                };
+            case 'clear':
+                return {
+                    position: { ...empty_position },
+                    turn: 'white'
+                }
             default:
                 throw new Error();
         }
