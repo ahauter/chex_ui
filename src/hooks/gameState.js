@@ -108,6 +108,11 @@ export default function useGameState() {
                     position: { ...empty_position },
                     turn: 'white'
                 }
+            case 'new_game':
+                return {
+                    position: { ...starting_position },
+                    turn: 'white'
+                }
             default:
                 throw new Error();
         }
@@ -117,6 +122,18 @@ export default function useGameState() {
         position: starting_position,
         turn: 'white',
     });
+
+    const new_game = () => {
+        dispatch({
+            type: "new_game"
+        })
+    }
+
+    const clear_board = () => {
+        dispatch({
+            type: "clear"
+        })
+    }
 
     const moveDispatch = (piece, oldHex, nexHex) => {
         dispatch({
@@ -138,5 +155,5 @@ export default function useGameState() {
         piece: piece,
         hex: hex
     })
-    return [state, moveDispatch, placeDispatch, removeDispatch];
+    return [state, new_game, clear_board, moveDispatch, placeDispatch, removeDispatch];
 }

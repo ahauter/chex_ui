@@ -1,6 +1,6 @@
 import './App.css';
 import Board from './components/board';
-import React from 'react';
+import React, { useEffect } from 'react';
 import useGameState from './hooks/gameState';
 import { useState } from 'react';
 import ModeSelect from './components/modeSelect';
@@ -29,16 +29,23 @@ const makePieceArray = (starting_position) => {
   return pieceArray;
 }
 
-
-
 function App() {
   const modes = ["Free Style", "Scenario Builder"]
   const [hexClicked, setHexClicked] = useState(null);
+  //TODO IMPLEMENT side pane to modify these values
   const [placingPiece, setPiece] = useState("white_king");
   const [removePiece, setRemovePiece] = useState(true);
+  // end TODO
   const [mode, setMode] = useState(modes[0]);
-  const [state, moveDispatch, placeDispatch, removeDispatch] = useGameState();
+  const [state, new_game, clear_board, moveDispatch, placeDispatch, removeDispatch] = useGameState();
   let pieceArray = makePieceArray(state.position);
+  useEffect(() => {
+    if (mode === modes[0]) {
+      new_game()
+    } else if (mode === modes[1]) {
+      clear_board()
+    }
+  }, [mode])
   let handleClick = (hex) => { };
   const handleClickGame = (hex, setHexClicked, dispatch) => {
     if (hexClicked === null) {
