@@ -84,8 +84,7 @@ const placePiece = (piece, oldPosition, newHex) => {
 const removePiece = (piece, oldPosition, removeHex) => {
     let new_position = oldPosition;
     const newPos = new_position[piece]
-    newPos.filter(hex => !sameHex(hex, removeHex))
-    new_position[piece] = newPos;
+    new_position[piece] = newPos.filter(hex => !sameHex(hex, removeHex))
     return new_position;
 }
 export default function useGameState() {
@@ -98,8 +97,11 @@ export default function useGameState() {
                 };
             case 'place':
                 return {
-                    position: makeMove(action.piece, state.position, action.oldHex, action.newHex),
-                    turn: state.turn === 'white' ? 'black' : 'white',
+                    position: placePiece(action.piece, state.position, action.hex),
+                };
+            case 'remove':
+                return {
+                    position: removePiece(action.piece, state.position, action.hex),
                 };
             case 'clear':
                 return {
@@ -115,7 +117,8 @@ export default function useGameState() {
         position: starting_position,
         turn: 'white',
     });
-    const customDispatch = (piece, oldHex, nexHex) => {
+
+    const moveDispatch = (piece, oldHex, nexHex) => {
         dispatch({
             type: 'move',
             piece: piece,
@@ -123,5 +126,17 @@ export default function useGameState() {
             newHex: nexHex,
         });
     }
-    return [state, customDispatch];
+
+    const removeDispatch = (piece, hex) => dispatch({
+        type: "remove",
+        piece: piece,
+        hex: hex
+    })
+
+    const placeDispatch = (piece, hex) => dispatch({
+        type: "place",
+        piece: piece,
+        hex: hex
+    })
+    return [state, moveDispatch, placeDispatch, removeDispatch];
 }

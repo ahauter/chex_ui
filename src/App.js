@@ -34,8 +34,10 @@ const makePieceArray = (starting_position) => {
 function App() {
   const modes = ["Free Style", "Scenario Builder"]
   const [hexClicked, setHexClicked] = useState(null);
+  const [placingPiece, setPiece] = useState("white_king");
+  const [removePiece, setRemovePiece] = useState(true);
   const [mode, setMode] = useState(modes[0]);
-  const [state, dispatch] = useGameState();
+  const [state, moveDispatch, placeDispatch, removeDispatch] = useGameState();
   let pieceArray = makePieceArray(state.position);
   let handleClick = (hex) => { };
   const handleClickGame = (hex, setHexClicked, dispatch) => {
@@ -48,7 +50,7 @@ function App() {
     if (piece === "") {
       setHexClicked(hex);
     } else {
-      dispatch(
+      moveDispatch(
         piece,
         hexClicked,
         hex,
@@ -56,8 +58,29 @@ function App() {
       setHexClicked(null);
     }
   }
-  if (mode === "") {
-    handleClick = (hex) => handleClickGame(hex, setHexClicked, dispatch)
+  const handleRemoveClick = (hex) => {
+    let [co1, co2, co3] = hex;
+    let piece = pieceArray[co1][co2][co3];
+    if (piece === "") {
+      return
+    }
+    removeDispatch(piece, hex)
+  }
+  const handlePlaceClick = (hex) => {
+    console.log(hex)
+    if (placingPiece === "") {
+      return
+    }
+    placeDispatch(placingPiece, hex)
+  }
+  if (mode === "Free Style") {
+    handleClick = (hex) => handleClickGame(hex, setHexClicked, moveDispatch)
+  } else if (mode === "Scenario Builder") {
+    if (removePiece) {
+      handleClick = handleRemoveClick
+    } else {
+      handleClick = handlePlaceClick
+    }
   }
 
   return (<>
