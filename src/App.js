@@ -1,9 +1,10 @@
-import './App.css';
+import styles from './App.module.css';
 import Board from './components/board';
 import React, { useEffect } from 'react';
 import useGameState from './hooks/gameState';
 import { useState } from 'react';
 import ModeSelect from './components/modeSelect';
+import PieceSelect from './components/pieceSelect';
 
 const makePieceArray = (starting_position) => {
   // we make an array with 3 indexs, one for each coordinate 
@@ -94,13 +95,16 @@ function App() {
     <h1>Welcome to Chex UI</h1>
     <h3>Select a mode to get started</h3>
     <ModeSelect selectedMode={mode} modeOptions={modes} setMode={setMode} />
-    <Board
-      width={900}
-      height={900}
-      hexSize={40}
-      piecePositions={pieceArray}
-      handleClick={handleClick}
-    />
+    <div className={styles.row}>
+      {mode === modes[1] && <PieceSelect />}
+      <Board
+        width={800}
+        height={800}
+        hexSize={40}
+        piecePositions={pieceArray}
+        handleClick={handleClick}
+      />
+    </div>
   </>);
 }
 
