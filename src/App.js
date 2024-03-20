@@ -81,6 +81,14 @@ function App() {
     }
     placeDispatch(placingPiece, hex)
   }
+  const handlePieceSelect = (pieceName) => {
+    if (pieceName === "remove") {
+      setRemovePiece(true)
+    } else {
+      setRemovePiece(false)
+      setPiece(pieceName)
+    }
+  }
   if (mode === "Free Style") {
     handleClick = (hex) => handleClickGame(hex, setHexClicked, moveDispatch)
   } else if (mode === "Scenario Builder") {
@@ -96,7 +104,6 @@ function App() {
     <h3>Select a mode to get started</h3>
     <ModeSelect selectedMode={mode} modeOptions={modes} setMode={setMode} />
     <div className={styles.row}>
-      {mode === modes[1] && <PieceSelect />}
       <Board
         width={800}
         height={800}
@@ -104,6 +111,10 @@ function App() {
         piecePositions={pieceArray}
         handleClick={handleClick}
       />
+      {mode === modes[1] &&
+        <PieceSelect handleSelect={handlePieceSelect}
+        />
+      }
     </div>
   </>);
 }
